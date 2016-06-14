@@ -141,10 +141,6 @@ var websocketclient = {
         }
 
         this.client.publish(topic, payload, qos, retain);
-        // this.client.chat("nat_html5", "world", function() {
-        //     console.log("CALLBACK");
-        // });
-
         // var message = new Messaging.Message(payload);
         // message.destinationName = topic;
         // message.qos = qos;
