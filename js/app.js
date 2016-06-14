@@ -131,7 +131,11 @@ var websocketclient = {
     },
 
     'disconnect': function () {
-        this.client.disconnect();
+        var conf = confirm("Not implement yet. Reload browser?");
+        if (conf) {
+            window.location.reload();
+        }
+        // this.client.disconnect();
     },
 
     'publish': function (topic, payload, qos, retain) {
