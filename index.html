@@ -35,12 +35,12 @@ limitations under the License.
 </head>
 <body class="notconnected">
 
-<div id="header">
-    <div>
-        <a href="http://www.hivemq.com"><img id="headerlogo" src="assets/logo.png"></a>
-        <span id="headertitle">Websockets Client Showcase</span>
-    </div>
-</div>
+<!--<div id="header">-->
+    <!--&lt;!&ndash;<div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="http://www.hivemq.com"><img id="headerlogo" src="assets/logo.png"></a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<span id="headertitle">Websockets Client Showcase</span>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</div>-->
 <div id="content" class="row">
 <div id="connection" class="row large-12 columns">
 
@@ -61,24 +61,22 @@ limitations under the License.
         <div class="panel">
             <div class="row">
                 <form class="custom">
-                    <div class="large-5 columns">
-                        <label>Host *</label>
-                        <input id="urlInput" type="text" value="broker.mqttdashboard.com">
-                    </div>
+                    <!--<div class="large-5 columns">-->
+                        <!--<label>Host *</label>-->
+                        <!--<input id="urlInput" type="text" value="broker.mqttdashboard.com">-->
+                    <!--</div>-->
 
-                    <div class="large-1 columns">
-                        <label>Port *</label>
-                        <input id="portInput" type="text" value="8000"/>
-                    </div>
+                    <!--<div class="large-1 columns">-->
+                        <!--<label>Port *</label>-->
+                        <!--<input id="portInput" type="text" value="8000"/>-->
+                    <!--</div>-->
 
-                    <div class="large-4 columns">
-                        <label>ClientID *</label>
-                        <input id="clientIdInput" type="text"/>
-                    </div>
+                    <!--<div class="large-4 columns">-->
+                        <!--<label>ClientID *</label>-->
+                        <!--<input id="clientIdInput" type="text"/>-->
+                    <!--</div>-->
 
-                    <div class="large-2 columns">
-                        <a id="connectButton" class="small button" onclick="websocketclient.connect();">Connect</a>
-                    </div>
+
 
                     <div class="large-2 columns">
                         <a id="disconnectButton" class="small button"
@@ -86,54 +84,62 @@ limitations under the License.
                     </div>
 
                     <div class="large-4 columns">
-                        <label>Username</label>
-                        <input id="userInput" type="text"/>
+                        <label>APP ID</label>
+                        <input id="appIdInput" type="text" value="HelloCMMC"/>
                     </div>
 
                     <div class="large-3 columns">
-                        <label>Password</label>
-                        <input id="pwInput" type="password"/>
+                        <label>APP KEY</label>
+                        <input id="appKeyInput" type="text" value="Is4NBM0SoMqfljU"/>
+                    </div>
+
+                    <div class="large-3 columns">
+                        <label>APP SECRET</label>
+                        <input id="appSecretInput" value="TRgtedpFgBLvM44tIqU6KxhjJ" type="text"/>
                     </div>
 
                     <div class="large-2 columns">
-                        <label>Keep Alive</label>
-                        <input id="keepAliveInput" type="text" value="60"/>
+                        <a id="connectButton" class="small button" onclick="websocketclient.connect();">Connect</a>
                     </div>
+                    <!--<div class="large-2 columns">-->
+                        <!--<label>Keep Alive</label>-->
+                        <!--<input id="keepAliveInput" type="text" value="60"/>-->
+                    <!--</div>-->
 
-                    <div class="large-1 columns">
-                        <label>SSL</label>
-                        <input id="sslInput" type="checkbox"/>
-                    </div>
+                    <!--<div class="large-1 columns">-->
+                        <!--<label>SSL</label>-->
+                        <!--<input id="sslInput" type="checkbox"/>-->
+                    <!--</div>-->
 
-                    <div class="large-2 columns">
-                        <label>Clean Session</label>
-                        <input class="checky" id="cleanSessionInput" type="checkbox" checked="checked"
-                               disabled="disabled"/>
-                    </div>
+                    <!--<div class="large-2 columns">-->
+                        <!--<label>Clean Session</label>-->
+                        <!--<input class="checky" id="cleanSessionInput" type="checkbox" checked="checked"-->
+                               <!--disabled="disabled"/>-->
+                    <!--</div>-->
 
-                    <div class="large-8 columns">
-                        <label>Last-Will Topic</label>
-                        <input id="lwTopicInput" type="text"/>
-                    </div>
+                    <!--<div class="large-8 columns">-->
+                        <!--<label>Last-Will Topic</label>-->
+                        <!--<input id="lwTopicInput" type="text"/>-->
+                    <!--</div>-->
 
-                    <div class="large-2 columns">
-                        <label>Last-Will QoS</label>
-                        <select id="lwQosInput">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                        </select>
-                    </div>
+                    <!--<div class="large-2 columns">-->
+                        <!--<label>Last-Will QoS</label>-->
+                        <!--<select id="lwQosInput">-->
+                            <!--<option>0</option>-->
+                            <!--<option>1</option>-->
+                            <!--<option>2</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
 
-                    <div class="large-2 columns">
-                        <label>Last-Will Retain</label>
-                        <input class="checky" id="LWRInput" type="checkbox"/>
-                    </div>
+                    <!--<div class="large-2 columns">-->
+                        <!--<label>Last-Will Retain</label>-->
+                        <!--<input class="checky" id="LWRInput" type="checkbox"/>-->
+                    <!--</div>-->
 
-                    <div class="large-12 columns">
-                        <label>Last-Will Messsage</label>
-                        <textarea id="LWMInput"></textarea>
-                    </div>
+                    <!--<div class="large-12 columns">-->
+                        <!--<label>Last-Will Messsage</label>-->
+                        <!--<textarea id="LWMInput"></textarea>-->
+                    <!--</div>-->
                 </form>
             </div>
         </div>
@@ -161,7 +167,7 @@ limitations under the License.
                         <div class="row">
                             <div class="large-6 columns">
                                 <label>Topic</label>
-                                <input id="publishTopic" type="text" value="testtopic/1">
+                                <input id="publishTopic" type="text" value="/gearname/nat_html5">
                             </div>
                             <div class="large-2 columns">
                                 <label for="publishQoSInput">QoS</label>
@@ -272,7 +278,7 @@ limitations under the License.
                                 <div class="row large-12 columns">
                                     <div class="large-12 columns">
                                         <label>Topic</label>
-                                        <input id="subscribeTopic" type="text" value="testtopic/#">
+                                        <input id="subscribeTopic" type="text" value="/gearname/#">
                                     </div>
                                 </div>
                             </form>
@@ -299,8 +305,9 @@ limitations under the License.
 <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js"></script>
 <script src="js/jquery.minicolors.min.js"></script>
-<script src="js/mqttws31.js"></script>
+<!--<script src="js/mqttws31.js"></script>-->
 <script src="js/encoder.js"></script>
+<script src="js/microgear.js"></script>
 <script src="js/app.js"></script>
 <script src="config.js"></script>
 

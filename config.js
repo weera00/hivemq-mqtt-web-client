@@ -1,2 +1,2 @@
-websocketserver = 'broker.mqttdashboard.com';
-websocketport = 8000;
+websocketserver = 'gb.netpie.io';
+websocketport = 8081;

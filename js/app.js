@@ -25,53 +25,56 @@ var websocketclient = {
     'connected': false,
 
     'connect': function () {
+        // var host = $('#urlInput').val();
+        // var port = parseInt($('#portInput').val(), 10);
+        // var clientId = $('#clientIdInput').val();
 
-        var host = $('#urlInput').val();
-        var port = parseInt($('#portInput').val(), 10);
-        var clientId = $('#clientIdInput').val();
-        var username = $('#userInput').val();
-        var password = $('#pwInput').val();
-        var keepAlive = parseInt($('#keepAliveInput').val());
-        var cleanSession = $('#cleanSessionInput').is(':checked');
-        var lwTopic = $('#lwTopicInput').val();
-        var lwQos = parseInt($('#lwQosInput').val());
-        var lwRetain = $('#LWRInput').is(':checked');
-        var lwMessage = $('#LWMInput').val();
+        // var username = $('#userInput').val();
+        // var password = $('#pwInput').val();
+        // var keepAlive = parseInt($('#keepAliveInput').val());
+        // var cleanSession = $('#cleanSessionInput').is(':checked');
+        // var lwTopic = $('#lwTopicInput').val();
+        // var lwQos = parseInt($('#lwQosInput').val());
+        // var lwRetain = $('#LWRInput').is(':checked');
+        // var lwMessage = $('#LWMInput').val();
         var ssl = $('#sslInput').is(':checked');
 
-        this.client = new Messaging.Client(host, port, clientId);
-        this.client.onConnectionLost = this.onConnectionLost;
-        this.client.onMessageArrived = this.onMessageArrived;
+        var appId = $("#appIdInput").val();
+        var appKey = $("#appKeyInput").val();
+        var appSecret = $("#appSecretInput").val();
 
-        var options = {
-            timeout: 3,
-            keepAliveInterval: keepAlive,
-            cleanSession: cleanSession,
-            useSSL: ssl,
-            onSuccess: this.onConnect,
-            onFailure: this.onFail
-        };
 
-        if (username.length > 0) {
-            options.userName = username;
-        }
-        if (password.length > 0) {
-            options.password = password;
-        }
-        if (lwTopic.length > 0) {
-            var willmsg = new Messaging.Message(lwMessage);
-            willmsg.qos = lwQos;
-            willmsg.destinationName = lwTopic;
-            willmsg.retained = lwRetain;
-            options.willMessage = willmsg;
-        }
+        // this.client = new Messaging.Client(host, port, clientId);
+        this.client = new Microgear.create({
+            key: appKey,
+            secret: appSecret,
+            alias: "nat_html5"
+        });
 
-        this.client.connect(options);
+
+        this.client.on("connected", this.onConnect);
+        this.client.on("message", this.onMessageArrived);
+        this.client.on("error", this.onFail);
+        this.client.on("closed", this.onConnectionLost);
+
+        // this.client.onConnectionLost = this.onConnectionLost;
+        // this.client.onMessageArrived = this.onMessageArrived;
+
+        // var options = {
+        //     timeout: 3,
+        //     keepAliveInterval: keepAlive,
+        //     cleanSession: cleanSession,
+        //     useSSL: ssl,
+        //     onSuccess: this.onConnect,
+        //     onFailure: this.onFail
+        // };
+
+        this.client.connect(appId);
     },
 
     'onConnect': function () {
         websocketclient.connected = true;
-        console.log("connected");
+        // console.log("connected");
         var body = $('body').addClass('connected').removeClass('notconnected').removeClass('connectionbroke');
 
         websocketclient.render.hide('conni');
@@ -81,12 +84,14 @@ var websocketclient = {
     },
 
     'onFail': function (message) {
+        console.log("ON FAILED");
         websocketclient.connected = false;
         console.log("error: " + message.errorMessage);
         websocketclient.render.showError('Connect failed: ' + message.errorMessage);
     },
 
     'onConnectionLost': function (responseObject) {
+        console.log("onConnectionLost");
         websocketclient.connected = false;
         if (responseObject.errorCode !== 0) {
             console.log("onConnectionLost:" + responseObject.errorMessage);
@@ -106,24 +111,23 @@ var websocketclient = {
         websocketclient.render.clearSubscriptions();
     },
 
-    'onMessageArrived': function (message) {
-//        console.log("onMessageArrived:" + message.payloadString + " qos: " + message.qos);
-
-        var subscription = websocketclient.getSubscriptionForTopic(message.destinationName);
+    'onMessageArrived': function (topic, message) {
+        // console.log("TOPIC: ", topic, " MESSAGE: ", message);
+        var subscription = websocketclient.getSubscriptionForTopic(topic);
 
         var messageObj = {
-            'topic': message.destinationName,
-            'retained': message.retained,
-            'qos': message.qos,
-            'payload': message.payloadString,
+            'topic': topic,
+            // 'retained': message.retained,
+            // 'qos': message.qos,
+            'payload': message,
             'timestamp': moment(),
             'subscriptionId': subscription.id,
             'color': websocketclient.getColorForSubscription(subscription.id)
         };
 
-        console.log(messageObj);
         messageObj.id = websocketclient.render.message(messageObj);
         websocketclient.messages.push(messageObj);
+        // console.log(messageObj);
     },
 
     'disconnect': function () {
@@ -131,21 +135,24 @@ var websocketclient = {
     },
 
     'publish': function (topic, payload, qos, retain) {
-
         if (!websocketclient.connected) {
             websocketclient.render.showError("Not connected");
             return false;
         }
 
-        var message = new Messaging.Message(payload);
-        message.destinationName = topic;
-        message.qos = qos;
-        message.retained = retain;
-        this.client.send(message);
+        this.client.publish(topic, payload, qos, retain);
+        // this.client.chat("nat_html5", "world", function() {
+        //     console.log("CALLBACK");
+        // });
+
+        // var message = new Messaging.Message(payload);
+        // message.destinationName = topic;
+        // message.qos = qos;
+        // message.retained = retain;
+        // this.client.send(message);
     },
 
     'subscribe': function (topic, qosNr, color) {
-
         if (!websocketclient.connected) {
             websocketclient.render.showError("Not connected");
             return false;
@@ -156,7 +163,7 @@ var websocketclient = {
             return false;
         }
 
-        if (_.find(this.subscriptions, { 'topic': topic })) {
+        if (_.find(this.subscriptions, {'topic': topic})) {
             websocketclient.render.showError('You are already subscribed to this topic');
             return false;
         }
@@ -169,7 +176,9 @@ var websocketclient = {
         var subscription = {'topic': topic, 'qos': qosNr, 'color': color};
         subscription.id = websocketclient.render.subscription(subscription);
         this.subscriptions.push(subscription);
+
         return true;
+
     },
 
     'unsubscribe': function (id) {
@@ -219,7 +228,7 @@ var websocketclient = {
                 return '99999';
             }
 
-            var sub = _.find(this.subscriptions, { 'id': id });
+            var sub = _.find(this.subscriptions, {'id': id});
             if (!sub) {
                 return '999999';
             } else {
@@ -258,7 +267,7 @@ var websocketclient = {
                 '       <div class="large-12 columns messageText">' +
                 '           <div class="large-3 columns date">' + message.timestamp.format("YYYY-MM-DD HH:mm:ss") + '</div>' +
                 '           <div class="large-5 columns topicM truncate" id="topicM' + largest + '" title="' + Encoder.htmlEncode(message.topic, 0) + '">Topic: ' + Encoder.htmlEncode(message.topic) + '</div>' +
-                '           <div class="large-2 columns qos">Qos: ' + message.qos + '</div>' +
+                // '           <div class="large-2 columns qos">Qos: ' + message.qos + '</div>' +
                 '           <div class="large-2 columns retain">';
             if (message.retained) {
                 html += 'Retained';
@@ -283,16 +292,16 @@ var websocketclient = {
             var largest = websocketclient.lastSubId++;
             $("#innerEdit").append(
                 '<li class="subLine" id="sub' + largest + '">' +
-                    '   <div class="row large-12 subs' + largest + '" style="border-left: solid 10px #' + subscription.color + '; background-color: #ffffff">' +
-                    '       <div class="large-12 columns subText">' +
-                    '           <div class="large-1 columns right closer">' +
-                    '              <a href="#" onclick="websocketclient.deleteSubscription(' + largest + '); return false;">x</a>' +
-                    '           </div>' +
-                    '           <div class="qos">Qos: ' + subscription.qos + '</div>' +
-                    '           <div class="topic truncate" id="topic' + largest + '" title="' + Encoder.htmlEncode(subscription.topic, 0) + '">' + Encoder.htmlEncode(subscription.topic) + '</div>' +
-                    '       </div>' +
-                    '   </div>' +
-                    '</li>');
+                '   <div class="row large-12 subs' + largest + '" style="border-left: solid 10px #' + subscription.color + '; background-color: #ffffff">' +
+                '       <div class="large-12 columns subText">' +
+                '           <div class="large-1 columns right closer">' +
+                '              <a href="#" onclick="websocketclient.deleteSubscription(' + largest + '); return false;">x</a>' +
+                '           </div>' +
+                '           <div class="qos">Qos: ' + subscription.qos + '</div>' +
+                '           <div class="topic truncate" id="topic' + largest + '" title="' + Encoder.htmlEncode(subscription.topic, 0) + '">' + Encoder.htmlEncode(subscription.topic) + '</div>' +
+                '       </div>' +
+                '   </div>' +
+                '</li>');
             return largest;
         },
 
