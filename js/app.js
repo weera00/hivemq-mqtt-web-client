@@ -131,7 +131,7 @@ var websocketclient = {
     },
 
     'disconnect': function () {
-        var conf = confirm("Not implement yet. Reload browser?");
+        var conf = confirm("Not implement yet. Reload the browser?");
         if (conf) {
             window.location.reload();
         }
